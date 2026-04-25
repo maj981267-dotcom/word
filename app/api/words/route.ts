@@ -1,15 +1,15 @@
 import { NextResponse } from 'next/server';
-import { db } from '@/lib/db';
-import { words } from '@/lib/schema';
-import { desc } from 'drizzle-orm';
+import { neon } from '@neondatabase/serverless';
+
+const sql = neon(process.env.DATABASE_URL!);
 
 export async function GET() {
   try {
-    const allWords = await db
-      .select()
-      .from(words)
-      .orderBy(desc(words.createdAt))
-      .limit(20);
+    const allWords = await sql`
+      SELECT * FROM ces 
+      ORDER BY created_at DESC 
+      LIMIT 20
+    `;
 
     return NextResponse.json({
       success: true,
